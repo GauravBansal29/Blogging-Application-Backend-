@@ -13,6 +13,7 @@ import com.blogging.blogapplication.Payloads.UserDto;
 import com.blogging.blogapplication.Services.UserService;
 
 @RestController
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
