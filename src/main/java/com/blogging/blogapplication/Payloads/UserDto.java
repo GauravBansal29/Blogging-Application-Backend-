@@ -18,6 +18,9 @@ import lombok.Setter;
 @Setter
 public class UserDto {
 
+    
+    private Long id;
+
     @Size(min = 3, message= "Username must be of size atleast 3")
     private String name;
 

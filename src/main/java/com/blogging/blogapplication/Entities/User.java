@@ -3,6 +3,7 @@ package com.blogging.blogapplication.Entities;
 import javax.persistence.*;
 
 import lombok.*;
+import java.util.List;
 
 @Entity
 @Table(name = "User")
@@ -29,4 +30,7 @@ public class User {
 
     @Column(name = "about", nullable = false)
     private String about;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Post> posts;
 }

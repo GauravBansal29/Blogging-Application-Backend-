@@ -14,6 +14,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CategoryDto {
 
+    private Long id;
+    
     @Size(min = 3, message = "Category names must be of atleast 3 size")
     private String name;
     @NotEmpty(message = "The description section can't be empty")
