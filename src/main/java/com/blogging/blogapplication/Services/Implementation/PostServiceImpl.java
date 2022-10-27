@@ -2,6 +2,7 @@ package com.blogging.blogapplication.Services.Implementation;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,26 +67,46 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto getPostById(Long postid) {
-        // TODO Auto-generated method stub
-        return null;
+
+        Post post = postRepo.findById(postid).orElseThrow(() -> {
+            return new ResourceNotFoundException("Post", "id", postid);
+        });
+
+        return modelMapper.map(post, PostDto.class);
+
     }
 
     @Override
     public List<PostDto> getAllPosts() {
-        // TODO Auto-generated method stub
-        return null;
+
+        List<Post> postlist = (List<Post>) postRepo.findAll();
+        List<PostDto> postdtoList = postlist.stream().map((post) -> modelMapper.map(post, PostDto.class))
+                .collect(Collectors.toList());
+        return postdtoList;
     }
 
     @Override
     public List<PostDto> getAllUserPosts(Long userid) {
-        // TODO Auto-generated method stub
-        return null;
+        User finduser = userRepo.findById(userid).orElseThrow(() -> {
+            return new ResourceNotFoundException("User", "id", userid);
+        });
+        List<Post> postlist = postRepo.findByUser(finduser);
+        List<PostDto> postdtoList = postlist.stream().map((post) -> modelMapper.map(post, PostDto.class))
+                .collect(Collectors.toList());
+        return postdtoList;
     }
 
     @Override
-    public List<PostDto> getAllCategoryPosts(Long postid) {
-        // TODO Auto-generated method stub
-        return null;
+    public List<PostDto> getAllCategoryPosts(Long categoryid) {
+
+        Category findCategory = categoryRepo.findById(categoryid).orElseThrow(() -> {
+            return new ResourceNotFoundException("Category", "id", categoryid);
+        });
+        List<Post> postlist = postRepo.findByCategory(findCategory);
+        List<PostDto> postdtoList = postlist.stream().map((post) -> modelMapper.map(post, PostDto.class))
+                .collect(Collectors.toList());
+
+        return postdtoList;
     }
 
     @Override
