@@ -14,6 +14,7 @@ com\blogging\blogapplication\Payloads\CategoryDto.class
 com\blogging\blogapplication\Repositories\UserRepository.class
 com\blogging\blogapplication\Services\CategoryService.class
 com\blogging\blogapplication\Repositories\PostRepository.class
+com\blogging\blogapplication\Payloads\PostPageResponse.class
 com\blogging\blogapplication\Controllers\UserController.class
 com\blogging\blogapplication\Payloads\UserDto.class
 com\blogging\blogapplication\Services\UserService.class

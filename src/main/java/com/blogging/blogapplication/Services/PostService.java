@@ -2,6 +2,7 @@ package com.blogging.blogapplication.Services;
 
 import java.util.List;
 import com.blogging.blogapplication.Payloads.PostDto;
+import com.blogging.blogapplication.Payloads.PostPageResponse;
 
 public interface PostService {
 
@@ -20,13 +21,13 @@ public interface PostService {
     PostDto getPostById(Long postid);
 
     // get all posts
-    List<PostDto> getAllPosts();
+    PostPageResponse getAllPosts(Integer pageNumber, Integer pageSize);
 
     // fetch all posts of a user -> user posts page
-    List<PostDto> getAllUserPosts(Long userid);
+    PostPageResponse getAllUserPosts(Long userid, Integer pageNumber, Integer pageSize);
 
     // fetch all posts of a category -> for showing a category blog page
-    List<PostDto> getAllCategoryPosts(Long postid);
+    PostPageResponse getAllCategoryPosts(Long postid, Integer pageNumber, Integer pageSize);
 
     // search posts
     PostDto searchPost(String keyword);

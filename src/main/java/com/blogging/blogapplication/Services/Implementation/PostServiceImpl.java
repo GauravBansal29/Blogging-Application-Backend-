@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.blogging.blogapplication.Entities.Category;
@@ -13,6 +16,7 @@ import com.blogging.blogapplication.Entities.Post;
 import com.blogging.blogapplication.Entities.User;
 import com.blogging.blogapplication.Exceptions.ResourceNotFoundException;
 import com.blogging.blogapplication.Payloads.PostDto;
+import com.blogging.blogapplication.Payloads.PostPageResponse;
 import com.blogging.blogapplication.Repositories.CategoryRepository;
 import com.blogging.blogapplication.Repositories.PostRepository;
 import com.blogging.blogapplication.Repositories.UserRepository;
@@ -89,36 +93,67 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getAllPosts() {
+    public PostPageResponse getAllPosts(Integer pageNumber, Integer pageSize) {
 
-        List<Post> postlist = (List<Post>) postRepo.findAll();
+        Pageable p = PageRequest.of(pageNumber, pageSize);
+
+        Page<Post> pagePost = postRepo.findAll(p);
+        List<Post> postlist = pagePost.getContent();
         List<PostDto> postdtoList = postlist.stream().map((post) -> modelMapper.map(post, PostDto.class))
                 .collect(Collectors.toList());
-        return postdtoList;
+        PostPageResponse resp = new PostPageResponse();
+        resp.setPagecontent(postdtoList);
+        resp.setPageNumber(pagePost.getNumber());
+        resp.setPageSize(pagePost.getSize());
+        resp.setTotalpages(pagePost.getTotalPages());
+        resp.setTotalElements(pagePost.getTotalElements());
+        resp.setIsLast(pagePost.isLast());
+        return resp;
     }
 
     @Override
-    public List<PostDto> getAllUserPosts(Long userid) {
+    public PostPageResponse getAllUserPosts(Long userid, Integer pageNumber, Integer pageSize) {
+
         User finduser = userRepo.findById(userid).orElseThrow(() -> {
             return new ResourceNotFoundException("User", "id", userid);
         });
-        List<Post> postlist = postRepo.findByUser(finduser);
+        Pageable p = PageRequest.of(pageNumber, pageSize);
+        Page<Post> pagePost = postRepo.findByUser(finduser, p);
+        List<Post> postlist = pagePost.getContent();
         List<PostDto> postdtoList = postlist.stream().map((post) -> modelMapper.map(post, PostDto.class))
                 .collect(Collectors.toList());
-        return postdtoList;
+
+        PostPageResponse resp = new PostPageResponse();
+        resp.setPagecontent(postdtoList);
+        resp.setPageNumber(pagePost.getNumber());
+        resp.setPageSize(pagePost.getSize());
+        resp.setTotalElements(pagePost.getTotalElements());
+        resp.setTotalpages(pagePost.getTotalPages());
+        resp.setIsLast(pagePost.isLast());
+        return resp;
     }
 
     @Override
-    public List<PostDto> getAllCategoryPosts(Long categoryid) {
+    public PostPageResponse getAllCategoryPosts(Long categoryid, Integer pageNumber, Integer pageSize) {
 
         Category findCategory = categoryRepo.findById(categoryid).orElseThrow(() -> {
             return new ResourceNotFoundException("Category", "id", categoryid);
         });
-        List<Post> postlist = postRepo.findByCategory(findCategory);
+        Pageable p = PageRequest.of(pageNumber, pageSize);
+        Page<Post> pagePost = postRepo.findByCategory(findCategory, p);
+        List<Post> postlist = pagePost.getContent();
         List<PostDto> postdtoList = postlist.stream().map((post) -> modelMapper.map(post, PostDto.class))
                 .collect(Collectors.toList());
 
-        return postdtoList;
+        PostPageResponse resp = new PostPageResponse();
+        resp.setPagecontent(postdtoList);
+        resp.setPageNumber(pagePost.getNumber());
+        resp.setPageSize(pagePost.getSize());
+        resp.setTotalElements(pagePost.getTotalElements());
+        resp.setTotalpages(pagePost.getTotalPages());
+        resp.setIsLast(pagePost.isLast());
+
+        return resp;
     }
 
     @Override
