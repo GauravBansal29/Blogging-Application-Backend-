@@ -21,13 +21,13 @@ public interface PostService {
     PostDto getPostById(Long postid);
 
     // get all posts
-    PostPageResponse getAllPosts(Integer pageNumber, Integer pageSize, String sortBy);
+    PostPageResponse getAllPosts(Integer pageNumber, Integer pageSize, String sortBy, Boolean dir);
 
     // fetch all posts of a user -> user posts page
-    PostPageResponse getAllUserPosts(Long userid, Integer pageNumber, Integer pageSize, String sortBy);
+    PostPageResponse getAllUserPosts(Long userid, Integer pageNumber, Integer pageSize, String sortBy, Boolean dir);
 
     // fetch all posts of a category -> for showing a category blog page
-    PostPageResponse getAllCategoryPosts(Long postid, Integer pageNumber, Integer pageSize, String sortBy);
+    PostPageResponse getAllCategoryPosts(Long postid, Integer pageNumber, Integer pageSize, String sortBy, Boolean dir);
 
     // search posts
     PostDto searchPost(String keyword);

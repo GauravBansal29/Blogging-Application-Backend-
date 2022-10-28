@@ -94,9 +94,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostPageResponse getAllPosts(Integer pageNumber, Integer pageSize, String sortBy) {
+    public PostPageResponse getAllPosts(Integer pageNumber, Integer pageSize, String sortBy, Boolean dir) {
 
-        Pageable p = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
+        Sort sort = null;
+        if (dir) {
+            sort = Sort.by(sortBy).ascending();
+        } else
+            sort = Sort.by(sortBy).descending();
+        Pageable p = PageRequest.of(pageNumber, pageSize, sort);
 
         Page<Post> pagePost = postRepo.findAll(p);
         List<Post> postlist = pagePost.getContent();
@@ -113,12 +118,18 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostPageResponse getAllUserPosts(Long userid, Integer pageNumber, Integer pageSize, String sortBy) {
+    public PostPageResponse getAllUserPosts(Long userid, Integer pageNumber, Integer pageSize, String sortBy,
+            Boolean dir) {
 
         User finduser = userRepo.findById(userid).orElseThrow(() -> {
             return new ResourceNotFoundException("User", "id", userid);
         });
-        Pageable p = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
+        Sort sort = null;
+        if (dir) {
+            sort = Sort.by(sortBy).ascending();
+        } else
+            sort = Sort.by(sortBy).descending();
+        Pageable p = PageRequest.of(pageNumber, pageSize, sort);
         Page<Post> pagePost = postRepo.findByUser(finduser, p);
         List<Post> postlist = pagePost.getContent();
         List<PostDto> postdtoList = postlist.stream().map((post) -> modelMapper.map(post, PostDto.class))
@@ -135,12 +146,18 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostPageResponse getAllCategoryPosts(Long categoryid, Integer pageNumber, Integer pageSize, String sortBy) {
+    public PostPageResponse getAllCategoryPosts(Long categoryid, Integer pageNumber, Integer pageSize, String sortBy,
+            Boolean dir) {
 
         Category findCategory = categoryRepo.findById(categoryid).orElseThrow(() -> {
             return new ResourceNotFoundException("Category", "id", categoryid);
         });
-        Pageable p = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
+        Sort sort = null;
+        if (dir) {
+            sort = Sort.by(sortBy).ascending();
+        } else
+            sort = Sort.by(sortBy).descending();
+        Pageable p = PageRequest.of(pageNumber, pageSize, sort);
         Page<Post> pagePost = postRepo.findByCategory(findCategory, p);
         List<Post> postlist = pagePost.getContent();
         List<PostDto> postdtoList = postlist.stream().map((post) -> modelMapper.map(post, PostDto.class))
