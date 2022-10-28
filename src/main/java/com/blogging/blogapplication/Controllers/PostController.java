@@ -38,8 +38,9 @@ public class PostController {
     @GetMapping("/user/{userid}")
     public ResponseEntity<PostPageResponse> getAllUserPosts(@PathVariable Long userid,
             @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize) {
-        PostPageResponse postlist = postService.getAllUserPosts(userid, pageNumber, pageSize);
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy) {
+        PostPageResponse postlist = postService.getAllUserPosts(userid, pageNumber, pageSize, sortBy);
         return new ResponseEntity<>(postlist, null, HttpStatus.FOUND);
     }
 
@@ -47,8 +48,9 @@ public class PostController {
     @GetMapping("/category/{categoryid}")
     public ResponseEntity<PostPageResponse> getAllCategoryPosts(@PathVariable Long categoryid,
             @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize) {
-        PostPageResponse postList = postService.getAllCategoryPosts(categoryid, pageNumber, pageSize);
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy) {
+        PostPageResponse postList = postService.getAllCategoryPosts(categoryid, pageNumber, pageSize, sortBy);
         return new ResponseEntity<>(postList, null, HttpStatus.FOUND);
     }
 
@@ -56,8 +58,9 @@ public class PostController {
     @GetMapping("/")
     public ResponseEntity<PostPageResponse> getAllPosts(
             @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize) {
-        PostPageResponse postlist = postService.getAllPosts(pageNumber, pageSize);
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy) {
+        PostPageResponse postlist = postService.getAllPosts(pageNumber, pageSize, sortBy);
         return new ResponseEntity<>(postlist, null, HttpStatus.FOUND);
     }
 

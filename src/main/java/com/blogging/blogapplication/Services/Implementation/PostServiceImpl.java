@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -93,9 +94,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostPageResponse getAllPosts(Integer pageNumber, Integer pageSize) {
+    public PostPageResponse getAllPosts(Integer pageNumber, Integer pageSize, String sortBy) {
 
-        Pageable p = PageRequest.of(pageNumber, pageSize);
+        Pageable p = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
 
         Page<Post> pagePost = postRepo.findAll(p);
         List<Post> postlist = pagePost.getContent();
@@ -112,12 +113,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostPageResponse getAllUserPosts(Long userid, Integer pageNumber, Integer pageSize) {
+    public PostPageResponse getAllUserPosts(Long userid, Integer pageNumber, Integer pageSize, String sortBy) {
 
         User finduser = userRepo.findById(userid).orElseThrow(() -> {
             return new ResourceNotFoundException("User", "id", userid);
         });
-        Pageable p = PageRequest.of(pageNumber, pageSize);
+        Pageable p = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
         Page<Post> pagePost = postRepo.findByUser(finduser, p);
         List<Post> postlist = pagePost.getContent();
         List<PostDto> postdtoList = postlist.stream().map((post) -> modelMapper.map(post, PostDto.class))
@@ -134,12 +135,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostPageResponse getAllCategoryPosts(Long categoryid, Integer pageNumber, Integer pageSize) {
+    public PostPageResponse getAllCategoryPosts(Long categoryid, Integer pageNumber, Integer pageSize, String sortBy) {
 
         Category findCategory = categoryRepo.findById(categoryid).orElseThrow(() -> {
             return new ResourceNotFoundException("Category", "id", categoryid);
         });
-        Pageable p = PageRequest.of(pageNumber, pageSize);
+        Pageable p = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
         Page<Post> pagePost = postRepo.findByCategory(findCategory, p);
         List<Post> postlist = pagePost.getContent();
         List<PostDto> postdtoList = postlist.stream().map((post) -> modelMapper.map(post, PostDto.class))
