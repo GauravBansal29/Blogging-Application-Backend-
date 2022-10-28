@@ -55,14 +55,26 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePost(Long postid) {
-        // TODO Auto-generated method stub
+        Post findPost = postRepo.findById(postid).orElseThrow(() -> {
+            return new ResourceNotFoundException("Post", "id", postid);
+        });
 
+        postRepo.delete(findPost);
     }
 
     @Override
     public PostDto updatePost(PostDto postDto, Long postid) {
-        // TODO Auto-generated method stub
-        return null;
+
+        Post findPost = postRepo.findById(postid).orElseThrow(() -> {
+            return new ResourceNotFoundException("Post", "id", postid);
+        });
+
+        findPost.setTitle(postDto.getTitle());
+        findPost.setContent(postDto.getContent());
+        findPost.setImage(postDto.getImage());
+        postRepo.save(findPost);
+
+        return modelMapper.map(findPost, PostDto.class);
     }
 
     @Override
