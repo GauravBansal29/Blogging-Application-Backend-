@@ -30,6 +30,7 @@ public interface PostService {
     PostPageResponse getAllCategoryPosts(Long postid, Integer pageNumber, Integer pageSize, String sortBy, Boolean dir);
 
     // search posts
-    PostDto searchPost(String keyword);
+    PostPageResponse searchPost(String keyword, String category, int pageNumber, int pageSize, String sortBy,
+            Boolean dir);
 
 }

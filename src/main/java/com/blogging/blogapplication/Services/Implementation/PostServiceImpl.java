@@ -175,9 +175,35 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto searchPost(String keyword) {
-        // TODO Auto-generated method stub
-        return null;
+    public PostPageResponse searchPost(String keyword, String category, int pageNumber, int pageSize, String sortBy,
+            Boolean dir) {
+
+        Sort sort = null;
+        if (dir) {
+            sort = Sort.by(sortBy).ascending();
+        } else
+            sort = Sort.by(sortBy).descending();
+
+        Pageable p = PageRequest.of(pageNumber, pageSize, sort);
+
+        Page<Post> pagePost;
+        if (category == "title")
+            pagePost = postRepo.searchByTitle(keyword, p);
+        else
+            pagePost = postRepo.searchByContent(keyword, p);
+
+        List<Post> postlist = pagePost.getContent();
+        List<PostDto> postdtoList = postlist.stream().map((post) -> modelMapper.map(post, PostDto.class))
+                .collect(Collectors.toList());
+        PostPageResponse resp = new PostPageResponse();
+        resp.setPagecontent(postdtoList);
+        resp.setPageNumber(pagePost.getNumber());
+        resp.setPageSize(pagePost.getSize());
+        resp.setTotalElements(pagePost.getTotalElements());
+        resp.setTotalpages(pagePost.getTotalPages());
+        resp.setIsLast(pagePost.isLast());
+
+        return resp;
     }
 
 }

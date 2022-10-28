@@ -87,4 +87,17 @@ public class PostController {
         postService.deletePost(id);
         return new ResponseEntity<>("Post has been deleted successfully", null, HttpStatus.OK);
     }
+
+    // search posts by category
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<PostPageResponse> searchByCategory(
+            @RequestParam(value = "category", defaultValue = "title", required = false) String category,
+            @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
+            @RequestParam(value = "dir", defaultValue = "true", required = false) Boolean dir,
+            @PathVariable String keyword) {
+        PostPageResponse postlist = postService.searchPost(keyword, category, pageNumber, pageSize, sortBy, dir);
+        return new ResponseEntity<>(postlist, null, HttpStatus.OK);
+    }
 }
