@@ -17,6 +17,7 @@ com\blogging\blogapplication\Repositories\PostRepository.class
 com\blogging\blogapplication\Payloads\PostPageResponse.class
 com\blogging\blogapplication\Controllers\UserController.class
 com\blogging\blogapplication\Payloads\UserDto.class
+com\blogging\blogapplication\Utils\FileUploadHelper.class
 com\blogging\blogapplication\Services\UserService.class
 com\blogging\blogapplication\Exceptions\ResourceNotFoundException.class
 com\blogging\blogapplication\Controllers\CategoryController.class

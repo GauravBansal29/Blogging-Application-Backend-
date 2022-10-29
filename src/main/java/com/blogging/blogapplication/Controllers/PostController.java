@@ -12,9 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.blogging.blogapplication.Payloads.PostDto;
 import com.blogging.blogapplication.Payloads.PostPageResponse;
 import com.blogging.blogapplication.Services.PostService;
+import com.blogging.blogapplication.Utils.FileUploadHelper;
+
 import java.util.List;
 
 import javax.validation.Valid;
@@ -25,6 +29,9 @@ public class PostController {
 
     @Autowired
     PostService postService;
+
+    @Autowired
+    FileUploadHelper fileUploadHelper;
 
     // create post
     @PostMapping("/{userid}/{categoryid}")
@@ -88,7 +95,7 @@ public class PostController {
         return new ResponseEntity<>("Post has been deleted successfully", null, HttpStatus.OK);
     }
 
-    // search posts by category
+    // search posts by category -- err not working to be seen
     @GetMapping("/search/{keyword}")
     public ResponseEntity<PostPageResponse> searchByCategory(
             @RequestParam(value = "category", defaultValue = "title", required = false) String category,
@@ -99,5 +106,25 @@ public class PostController {
             @PathVariable String keyword) {
         PostPageResponse postlist = postService.searchPost(keyword, category, pageNumber, pageSize, sortBy, dir);
         return new ResponseEntity<>(postlist, null, HttpStatus.OK);
+    }
+
+    @PostMapping("/upload-image")
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+        try {
+            if (file.isEmpty())
+                return ResponseEntity.status(500).body("File cannot be empty");
+            if (!file.getContentType().equals("image/jpeg"))
+                return ResponseEntity.status(500).body("Only jpeg type image files are supported");
+
+            Boolean uploaded = fileUploadHelper.uploadFile(file);
+            if (uploaded)
+                return ResponseEntity.status(HttpStatus.OK).body("File Uploaded Successfully");
+            else
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("File Upload Unsuccessful");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Internal Server Error. Try Again");
+        }
+
     }
 }
